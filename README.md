@@ -231,10 +231,16 @@ curl -X DELETE http://localhost:3000/tareas/999
 | 400    | Bad Request | Faltan campos obligatorios o tipo invalido |
 | 404    | Not Found   | El ID solicitado no existe en el array     |
 
-8. Tecnologias utilizadas
+8. Decisiones de diseño y tecnologias utilizadas
 
 - Node.js: Entorno de ejecucion de JavaScript en el servidor
 - Express.js: Framework minimalista para crear APIs web
+
+a) Arquitectura y separacion de responsabilidades: Se dividio el codigo en index.js (configuracion del servidor) y routes.js (logica de endpoints y validacion) para mantener un diseño limpio y modular.
+
+b) Generacion de ID autoincremental: Se implemento una funcion basada en Math.max() para calcular el nuevo ID. Esto previene la duplicacion de IDs en caso de que se elimine un registro intermedio en el array.
+
+c) Manejo de Errores: Se diseño una funcion centralizada de validacion (validarTarea) que intercepta peticiones vacias o con tipos de datos incorrectos antes de que el servidor intente procesarlas. Esto asegura que el servidor devuelva un error controlado 400 Bad Request en lugar de sufrir un colapso total (Internal Server Error).
 
 9. Autor
 
