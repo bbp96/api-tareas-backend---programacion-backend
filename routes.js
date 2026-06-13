@@ -18,10 +18,10 @@ function validarTarea(body, esActualizacion = false) {
   // Validaciones para la creacion de tareas (POST)
   if (!esActualizacion) {
     if (!titulo || String(titulo).trim() === "") {
-      return { valido: false, mensaje: "El campo 'titulo' es obligatorio." };
+      return { valido: false, mensaje: "El campo 'titulo' es obligatorio y no puede estar vacio." };
     }
     if (!descripcion || String(descripcion).trim() === "") {
-      return { valido: false, mensaje: "El campo 'descripcion' es obligatorio." };
+      return { valido: false, mensaje: "El campo 'descripcion' es obligatorio y no puede estar vacio." };
     }
   }
 
@@ -36,7 +36,7 @@ function validarTarea(body, esActualizacion = false) {
     return { valido: false, mensaje: "El campo 'descripcion' debe ser de tipo texto." };
   }
   if (completada !== undefined && typeof completada !== "boolean") {
-    return { valido: false, mensaje: "El campo 'completada' debe ser un valor booleano (true o false)." };
+    return { valido: false, mensaje: "El campo 'completada' debe ser de tipo boolean (true o false)." };
   }
 
   return { valido: true, mensaje: null };
@@ -57,13 +57,13 @@ router.get("/:id", (req, res) => {
     return res.status(400).json({ exito: false, mensaje: "El ID debe ser un numero valido." });
   }
 
-  const tarea = tareas.find((t) => t.id === id);
+  const indice = tareas.findIndex((t) => t.id === id);
 
-  if (!tarea) {
-    return res.status(404).json({ exito: false, mensaje: `No se encontro la tarea con la ID ${id}.` });
+  if (indice === -1) {
+    return res.status(404).json({ exito: false, mensaje: `No se encontro una tarea con el ID ${id}.` });
   }
 
-  res.status(200).json({ exito: true, datos: tarea });
+  res.status(200).json({ exito: true, mensaje: "Tarea encontrada.", datos: tareas[indice] });
 });
 
 router.post("/", (req, res) => {
@@ -94,7 +94,7 @@ router.put("/:id", (req, res) => {
   const indice = tareas.findIndex((t) => t.id === id);
 
   if (indice === -1) {
-    return res.status(404).json({ exito: false, mensaje: `No se encontro la tarea con la ID ${id}.` });
+    return res.status(404).json({ exito: false, mensaje: `No se encontro una tarea con el ID ${id}.` });
   }
 
   const validacion = validarTarea(req.body, true);
@@ -122,11 +122,11 @@ router.delete("/:id", (req, res) => {
   const indice = tareas.findIndex((t) => t.id === id);
 
   if (indice === -1) {
-    return res.status(404).json({ exito: false, mensaje: `No se encontro la tarea con la ID ${id}.` });
+    return res.status(404).json({ exito: false, mensaje: `No se encontro una tarea con el ID ${id}.` });
   }
 
   const eliminado = tareas.splice(indice, 1)[0];
-  res.status(200).json({ exito: true, mensaje: "Tarea eliminada correctamente.", datos: eliminado });
+  res.status(200).json({ exito: true, mensaje: "Tarea eliminada exitosamente.", datos: eliminado });
 });
 
 module.exports = router;
